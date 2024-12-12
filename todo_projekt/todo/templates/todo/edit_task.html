@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edytuj zadanie</title>
+</head>
+<body>
+    <h1>Edytuj zadanie: {{ task.title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zapisz zmiany</button>
+    </form>
+    <a href="{% url 'task_list' %}">Powrót do listy</a>
+</body>
+</html>

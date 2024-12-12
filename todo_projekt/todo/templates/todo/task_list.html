@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista To-Do</title>
+</head>
+<body>
+    <h1>Moja Lista To-Do</h1>
+
+    <p>
+        <a href="{% url 'add_task' %}">Dodaj nowe zadanie</a>
+    </p>
+
+   <table border="1">
+    <thead>
+        <tr>
+            <th>Nazwa zadania</th>
+            <th>Stopień realizacji</th>
+            <th>Zmień status</th>
+            <th>Data i godzina utworzenia</th>
+            <th>Data i czas do wykonania</th>
+            <th>Usuń</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>
+                    {% if task.completed %}
+                        <span style="color: green; font-weight: bold;">Zrobione</span>
+                    {% else %}
+                        <span style="color: red; font-weight: bold;">Do zrobienia</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'change_task_status' task.id %}">
+                        {% csrf_token %}
+                        <input type="checkbox" name="completed" value="true" {% if task.completed %}checked{% endif %} onchange="this.form.submit();">
+                    </form>
+                </td>
+                <td>{{ task.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if task.due_date %}
+                        {{ task.due_date|date:"Y-m-d H:i" }}
+                    {% else %}
+                        Brak
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'delete_task' task.id %}">Usuń</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Wyloguj się</button>
+    </form>
+</body>
+</html>
